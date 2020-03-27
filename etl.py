@@ -10,20 +10,20 @@ def process_song_file(cur, filepath):
     df = pd.read_json(filepath, lines=True)    
     
     for value in df.values:
-        artist_id, artist_name, artist_location, artist_longitude, artist_latitude, song_id, title, artist_id, year, duration = value
+        num_songs, artist_id, artist_latitude, artist_longitude, artist_location, artist_name, song_id, title, duration, year = value
+        
+        # insert artist record
+        artist_data = [artist_id, artist_name, artist_location, artist_longitude, artist_latitude]
+        cur.execute(artist_table_insert, artist_data)
         
         # insert song record
         song_data = [song_id, title, artist_id, year, duration]
         cur.execute(song_table_insert, song_data)
-    
-        # insert artist record
-        artist_data = [artist_id, artist_name, artist_location, artist_longitude, artist_latitude]
-        cur.execute(artist_table_insert, artist_data)
 
 
 def process_log_file(cur, filepath):
     # open log file
-    df = pd.read_json(file_path, lines=True)
+    df = pd.read_json(filepath, lines=True)
 
     # filter by NextSong action
     df = df[df['page'] == 'NextSong']
@@ -34,7 +34,7 @@ def process_log_file(cur, filepath):
     # insert time data records
     time_data = []
     for timeline in t:
-        time_data.append([time, time.hour, time.day, time.week, time.month, time.year, time.day_name()])
+        time_data.append([timeline, timeline.hour, timeline.day, timeline.week, timeline.month, timeline.year, timeline.day_name()])
     
     column_labels = ('start_time', 'hour', 'day', 'week', 'month', 'year', 'weekday')
 

@@ -35,11 +35,13 @@ song_table_create = ("""
     CREATE TABLE IF NOT EXISTS songs
     (song_id text PRIMARY KEY,
     title text NOT NULL,
-    artist_id text NOT NULL REFERENCES artists(artist_id),
+    artist_id text NOT NULL,
     year int,
     duration float NOT NULL
     )
 """)
+
+#REFERENCES artists(artist_id)
 
 artist_table_create = ("""
     CREATE TABLE IF NOT EXISTS artists
